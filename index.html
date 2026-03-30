@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Béďi hra Snake</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="game-card">
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">HTML, CSS a JavaScript</p>
+          <h1>Béďi hra Snake</h1>
+          <p class="hero-text">
+            Zakousni se do jablka a chyť jich co nejvíce.
+          </p>
+          <p class="hero-instructions">
+            Ovládání: šipky nebo W, A, S, D. Vyhni se zdi a pozor na střet hlava na hlavu s cizími hady.
+          </p>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-snake art-snake-left"></div>
+          <div class="art-snake art-snake-right"></div>
+          <div class="art-apple"></div>
+          <div class="art-streak streak-a"></div>
+          <div class="art-streak streak-b"></div>
+          <div class="art-streak streak-c"></div>
+        </div>
+      </div>
+
+      <div class="hud">
+        <article class="hud-box">
+          <span class="hud-label">Skóre</span>
+          <strong class="hud-value" id="score">3</strong>
+        </article>
+        <article class="hud-box">
+          <span class="hud-label">Rekord</span>
+          <strong class="hud-value" id="best-score">3</strong>
+        </article>
+        <article class="hud-box">
+          <span class="hud-label">Délka hada</span>
+          <strong class="hud-value" id="snake-length">3</strong>
+        </article>
+        <button class="restart-button" id="restart-button" type="button">Restart</button>
+      </div>
+
+      <section class="board-wrap">
+        <canvas
+          id="game-board"
+          class="game-board"
+          width="600"
+          height="600"
+          aria-label="Herní plocha hry Snake"
+        ></canvas>
+
+        <div class="overlay" id="overlay">
+          <div class="overlay-card">
+            <h2 id="overlay-title">Stiskni šipku pro start</h2>
+            <p id="overlay-text">Had se ovládá šipkami nebo klávesami W, A, S, D.</p>
+            <button class="overlay-button" id="overlay-button" type="button">Začít</button>
+          </div>
+        </div>
+      </section>
+
+    </section>
+  </main>
+
+  <script src="./game.js"></script>
+</body>
+</html>

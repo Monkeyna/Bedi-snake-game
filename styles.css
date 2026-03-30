@@ -1,0 +1,321 @@
+:root {
+  color-scheme: light;
+  --bg-top: #d7ffe3;
+  --bg-bottom: #4cb26d;
+  --panel: rgba(236, 255, 242, 0.88);
+  --panel-border: rgba(39, 107, 65, 0.18);
+  --text-main: #18472b;
+  --text-soft: #3f7b55;
+  --accent: #4a71ff;
+  --accent-deep: #244dd8;
+  --gold: #ffd36c;
+  --shadow: 0 28px 70px rgba(35, 92, 56, 0.24);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(72, 135, 255, 0.22), transparent 30%),
+    linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+}
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.game-card {
+  width: min(100%, 980px);
+  padding: 28px;
+  border-radius: 32px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) 260px;
+  gap: 24px;
+  align-items: center;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--text-soft);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  line-height: 1;
+}
+
+.hero-text {
+  margin-top: 14px;
+  max-width: 52ch;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.hero-instructions {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  color: var(--text-soft);
+}
+
+.hero-art {
+  position: relative;
+  min-height: 180px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.72), transparent 25%),
+    linear-gradient(145deg, #95e26e, #2d9a5a 55%, #2f6fdc);
+  overflow: hidden;
+}
+
+.art-snake {
+  position: absolute;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #7094ff, #4467eb);
+  box-shadow:
+    inset 0 -8px 18px rgba(24, 44, 128, 0.22),
+    inset 0 10px 18px rgba(255, 255, 255, 0.24);
+}
+
+.art-snake::before {
+  content: "";
+  position: absolute;
+  inset: 12px 18px auto auto;
+  width: 44px;
+  height: 12px;
+  border-radius: 999px;
+  transform: rotate(-18deg);
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.art-snake::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.art-snake-left {
+  left: -18px;
+  top: 34px;
+  width: 186px;
+  height: 54px;
+  transform: rotate(-26deg);
+}
+
+.art-snake-right {
+  right: -18px;
+  bottom: 18px;
+  width: 154px;
+  height: 48px;
+  transform: rotate(22deg);
+}
+
+.art-apple {
+  position: absolute;
+  top: 34px;
+  right: 70px;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 28% 25%, #ffac87 0, #f0441d 42%, #c9200f 100%);
+  box-shadow: 0 12px 20px rgba(191, 37, 15, 0.26);
+}
+
+.art-apple::before,
+.art-apple::after {
+  content: "";
+  position: absolute;
+  display: block;
+}
+
+.art-apple::before {
+  top: -12px;
+  left: 31px;
+  width: 4px;
+  height: 18px;
+  border-radius: 999px;
+  background: #6d3814;
+  transform: rotate(-18deg);
+}
+
+.art-apple::after {
+  top: -10px;
+  left: 34px;
+  width: 20px;
+  height: 11px;
+  border-radius: 999px 999px 999px 0;
+  background: linear-gradient(180deg, #2fc97c, #178957);
+  transform: rotate(-22deg);
+}
+
+.art-streak {
+  position: absolute;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(195, 241, 255, 0.85), rgba(255, 255, 255, 0));
+  transform: rotate(-26deg);
+  opacity: 0.7;
+}
+
+.streak-a {
+  top: 24px;
+  left: 26px;
+  width: 96px;
+}
+
+.streak-b {
+  top: 98px;
+  right: 18px;
+  width: 120px;
+}
+
+.streak-c {
+  bottom: 28px;
+  left: 74px;
+  width: 86px;
+}
+
+.hud {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 14px;
+  margin: 7px 0 18px;
+}
+
+.hud-box {
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(78, 132, 94, 0.16);
+}
+
+.hud-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-soft);
+}
+
+.hud-value {
+  font-size: clamp(1.3rem, 3vw, 2rem);
+}
+
+.restart-button,
+.overlay-button {
+  border: 0;
+  border-radius: 18px;
+  padding: 14px 22px;
+  font: inherit;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+  box-shadow: 0 14px 28px rgba(202, 63, 113, 0.26);
+  cursor: pointer;
+}
+
+.board-wrap {
+  position: relative;
+  width: min(100%, 426px);
+  margin: 0 auto;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(227, 255, 188, 0.95), rgba(136, 208, 100, 0.95));
+  border: 1px solid rgba(53, 126, 73, 0.28);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5);
+}
+
+.game-board {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(18, 66, 34, 0.24);
+  backdrop-filter: blur(4px);
+  transition: opacity 160ms ease, visibility 160ms ease;
+}
+
+.overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.overlay-card {
+  width: min(100%, 420px);
+  padding: 28px;
+  text-align: center;
+  border-radius: 24px;
+  background: rgba(241, 255, 245, 0.92);
+  border: 1px solid rgba(86, 153, 105, 0.22);
+  box-shadow: 0 22px 44px rgba(47, 96, 59, 0.22);
+}
+
+.overlay-card h2 {
+  margin-bottom: 10px;
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+}
+
+.overlay-card p {
+  margin-bottom: 18px;
+  color: var(--text-soft);
+  line-height: 1.45;
+}
+
+@media (max-width: 780px) {
+  .game-card {
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-art {
+    min-height: 150px;
+  }
+
+  .hud {
+    grid-template-columns: 1fr;
+  }
+
+  .restart-button {
+    width: 100%;
+  }
+}
