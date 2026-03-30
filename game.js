@@ -625,11 +625,13 @@ function handleContrastToggle() {
 }
 
 function handleTouchStart(event) {
+  event.preventDefault();
   const touch = event.changedTouches[0];
   touchStart = { x: touch.clientX, y: touch.clientY };
 }
 
 function handleTouchEnd(event) {
+  event.preventDefault();
   if (!touchStart) {
     return;
   }
@@ -650,6 +652,10 @@ function handleTouchEnd(event) {
   }
 
   board.focus();
+}
+
+function handleTouchMove(event) {
+  event.preventDefault();
 }
 
 document.addEventListener("keydown", handleKeydown);
@@ -678,8 +684,9 @@ touchZoneButtons.forEach((button) => {
   button.addEventListener("click", activateDirection);
 });
 
-board.addEventListener("touchstart", handleTouchStart, { passive: true });
-board.addEventListener("touchend", handleTouchEnd, { passive: true });
+board.addEventListener("touchstart", handleTouchStart, { passive: false });
+board.addEventListener("touchmove", handleTouchMove, { passive: false });
+board.addEventListener("touchend", handleTouchEnd, { passive: false });
 
 bestScore = getStoredBestScore();
 setContrastMode(getStoredContrastMode());
