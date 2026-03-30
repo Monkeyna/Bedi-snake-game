@@ -74,6 +74,13 @@
           Váš prohlížeč nepodporuje canvas. Hru lze ovládat šipkami nebo klávesami W, A, S, D.
         </canvas>
 
+        <div class="touch-zones" aria-hidden="true">
+          <button class="touch-zone touch-zone-up" type="button" data-direction="up" tabindex="-1">Nahoru</button>
+          <button class="touch-zone touch-zone-left" type="button" data-direction="left" tabindex="-1">Doleva</button>
+          <button class="touch-zone touch-zone-right" type="button" data-direction="right" tabindex="-1">Doprava</button>
+          <button class="touch-zone touch-zone-down" type="button" data-direction="down" tabindex="-1">Dolů</button>
+        </div>
+
         <section class="game-status" aria-labelledby="status-heading">
           <h2 class="sr-only" id="status-heading">Stav hry</h2>
           <p class="status-card" id="status-card">

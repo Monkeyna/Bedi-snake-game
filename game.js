@@ -7,7 +7,8 @@ const restartButton = document.querySelector("#restart-button");
 const statusElement = document.querySelector("#status");
 const statusCard = document.querySelector("#status-card");
 const pauseButton = document.querySelector("#pause-button");
-const controlButtons = document.querySelectorAll("[data-direction]");
+const controlButtons = document.querySelectorAll(".control-button[data-direction]");
+const touchZoneButtons = document.querySelectorAll(".touch-zone[data-direction]");
 const contrastToggle = document.querySelector("#contrast-toggle");
 
 const tileCount = 15;
@@ -664,6 +665,17 @@ controlButtons.forEach((button) => {
     handleDirectionalInput(button.dataset.direction);
     board.focus();
   });
+});
+
+touchZoneButtons.forEach((button) => {
+  const activateDirection = (event) => {
+    event.preventDefault();
+    handleDirectionalInput(button.dataset.direction);
+    board.focus();
+  };
+
+  button.addEventListener("pointerdown", activateDirection);
+  button.addEventListener("click", activateDirection);
 });
 
 board.addEventListener("touchstart", handleTouchStart, { passive: true });

@@ -309,6 +309,57 @@ h1 {
   background: var(--board-bg);
 }
 
+.touch-zones {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.touch-zone {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 18px;
+  font: inherit;
+  font-weight: 700;
+  color: rgba(19, 43, 29, 0.8);
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(1px);
+  pointer-events: auto;
+}
+
+.touch-zone-up,
+.touch-zone-down {
+  left: 22%;
+  width: 56%;
+  height: 16%;
+}
+
+.touch-zone-up {
+  top: 3%;
+}
+
+.touch-zone-down {
+  bottom: 3%;
+}
+
+.touch-zone-left,
+.touch-zone-right {
+  top: 22%;
+  width: 16%;
+  height: 56%;
+}
+
+.touch-zone-left {
+  left: 3%;
+}
+
+.touch-zone-right {
+  right: 3%;
+}
+
 .game-status {
   padding: 14px;
   background: #f4f7f3;
@@ -416,6 +467,10 @@ h1 {
   .game-board {
     max-height: 48vh;
     object-fit: contain;
+  }
+
+  .touch-zone {
+    display: flex;
   }
 
   .game-status {
