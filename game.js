@@ -4,65 +4,74 @@ const scoreElement = document.querySelector("#score");
 const bestScoreElement = document.querySelector("#best-score");
 const snakeLengthElement = document.querySelector("#snake-length");
 const restartButton = document.querySelector("#restart-button");
-const overlay = document.querySelector("#overlay");
-const overlayTitle = document.querySelector("#overlay-title");
-const overlayText = document.querySelector("#overlay-text");
-const overlayButton = document.querySelector("#overlay-button");
+const statusElement = document.querySelector("#status");
+const statusCard = document.querySelector("#status-card");
+const pauseButton = document.querySelector("#pause-button");
+const controlButtons = document.querySelectorAll("[data-direction]");
+const contrastToggle = document.querySelector("#contrast-toggle");
 
 const tileCount = 15;
 const tileSize = board.width / tileCount;
 const gameSpeed = 230;
-const bestScoreKey = "snake-romantic-best-score";
 const enemyMoveInterval = 2;
+const bestScoreKey = "snake-best-score";
+const contrastModeKey = "snake-high-contrast";
+const swipeThreshold = 18;
+
+const directions = {
+  ArrowUp: { x: 0, y: -1 },
+  ArrowDown: { x: 0, y: 1 },
+  ArrowLeft: { x: -1, y: 0 },
+  ArrowRight: { x: 1, y: 0 },
+  w: { x: 0, y: -1 },
+  s: { x: 0, y: 1 },
+  a: { x: -1, y: 0 },
+  d: { x: 1, y: 0 },
+  up: { x: 0, y: -1 },
+  down: { x: 0, y: 1 },
+  left: { x: -1, y: 0 },
+  right: { x: 1, y: 0 },
+};
 
 const enemyTemplates = [
   {
-    colors: {
-      body: "rgba(96, 102, 116, 0.72)",
-      bodyShadow: "rgba(54, 58, 69, 0.76)",
-      highlight: "rgba(180, 189, 208, 0.18)",
-      eye: "rgba(10, 12, 18, 0.82)",
-      tongue: "rgba(133, 77, 77, 0.42)",
-    },
     path: [
-      { x: -1, y: 2 }, { x: 1, y: 2 }, { x: 3, y: 3 }, { x: 5, y: 4 },
-      { x: 7, y: 4 }, { x: 9, y: 3 }, { x: 11, y: 2 }, { x: 13, y: 2 },
-      { x: 15, y: 2 }, { x: 13, y: 2 }, { x: 11, y: 3 }, { x: 9, y: 4 },
-      { x: 7, y: 5 }, { x: 5, y: 5 }, { x: 3, y: 4 }, { x: 1, y: 3 },
+      { x: -1, y: 1 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 },
+      { x: 3, y: 1 }, { x: 4, y: 1 }, { x: 5, y: 1 }, { x: 6, y: 1 },
+      { x: 7, y: 1 }, { x: 8, y: 1 }, { x: 9, y: 1 }, { x: 10, y: 1 },
+      { x: 11, y: 1 }, { x: 12, y: 1 }, { x: 13, y: 1 }, { x: 14, y: 1 },
+      { x: 15, y: 1 }, { x: 14, y: 1 }, { x: 13, y: 1 }, { x: 12, y: 1 },
+      { x: 11, y: 1 }, { x: 10, y: 1 }, { x: 9, y: 1 }, { x: 8, y: 1 },
+      { x: 7, y: 1 }, { x: 6, y: 1 }, { x: 5, y: 1 }, { x: 4, y: 1 },
+      { x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }, { x: 0, y: 1 },
     ],
     length: 3,
     progress: 0,
   },
   {
-    colors: {
-      body: "rgba(86, 92, 106, 0.74)",
-      bodyShadow: "rgba(42, 46, 58, 0.78)",
-      highlight: "rgba(170, 178, 196, 0.16)",
-      eye: "rgba(10, 12, 18, 0.82)",
-      tongue: "rgba(133, 77, 77, 0.42)",
-    },
     path: [
-      { x: 15, y: 7 }, { x: 13, y: 7 }, { x: 11, y: 8 }, { x: 9, y: 9 },
-      { x: 7, y: 10 }, { x: 5, y: 10 }, { x: 3, y: 9 }, { x: 1, y: 8 },
-      { x: -1, y: 7 }, { x: 1, y: 7 }, { x: 3, y: 8 }, { x: 5, y: 9 },
-      { x: 7, y: 9 }, { x: 9, y: 8 }, { x: 11, y: 7 }, { x: 13, y: 6 },
+      { x: 15, y: 13 }, { x: 14, y: 13 }, { x: 13, y: 13 }, { x: 12, y: 13 },
+      { x: 11, y: 13 }, { x: 10, y: 13 }, { x: 9, y: 13 }, { x: 8, y: 13 },
+      { x: 7, y: 13 }, { x: 6, y: 13 }, { x: 5, y: 13 }, { x: 4, y: 13 },
+      { x: 3, y: 13 }, { x: 2, y: 13 }, { x: 1, y: 13 }, { x: 0, y: 13 },
+      { x: -1, y: 13 }, { x: 0, y: 13 }, { x: 1, y: 13 }, { x: 2, y: 13 },
+      { x: 3, y: 13 }, { x: 4, y: 13 }, { x: 5, y: 13 }, { x: 6, y: 13 },
+      { x: 7, y: 13 }, { x: 8, y: 13 }, { x: 9, y: 13 }, { x: 10, y: 13 },
+      { x: 11, y: 13 }, { x: 12, y: 13 }, { x: 13, y: 13 }, { x: 14, y: 13 },
     ],
     length: 3,
-    progress: 5,
+    progress: 6,
   },
   {
-    colors: {
-      body: "rgba(76, 81, 95, 0.76)",
-      bodyShadow: "rgba(34, 38, 48, 0.8)",
-      highlight: "rgba(162, 170, 188, 0.15)",
-      eye: "rgba(10, 12, 18, 0.84)",
-      tongue: "rgba(133, 77, 77, 0.4)",
-    },
     path: [
-      { x: 3, y: 15 }, { x: 3, y: 13 }, { x: 4, y: 11 }, { x: 5, y: 9 },
-      { x: 6, y: 7 }, { x: 7, y: 5 }, { x: 8, y: 3 }, { x: 9, y: 1 },
-      { x: 10, y: -1 }, { x: 10, y: 1 }, { x: 9, y: 3 }, { x: 8, y: 5 },
-      { x: 7, y: 7 }, { x: 6, y: 9 }, { x: 5, y: 11 }, { x: 4, y: 13 },
+      { x: 13, y: -1 }, { x: 13, y: 0 }, { x: 13, y: 1 }, { x: 13, y: 2 },
+      { x: 13, y: 3 }, { x: 13, y: 4 }, { x: 13, y: 5 }, { x: 13, y: 6 },
+      { x: 13, y: 7 }, { x: 13, y: 8 }, { x: 13, y: 9 }, { x: 13, y: 10 },
+      { x: 13, y: 11 }, { x: 13, y: 12 }, { x: 13, y: 13 }, { x: 13, y: 14 },
+      { x: 13, y: 15 }, { x: 13, y: 14 }, { x: 13, y: 13 }, { x: 13, y: 12 },
+      { x: 13, y: 11 }, { x: 13, y: 10 }, { x: 13, y: 9 }, { x: 13, y: 8 },
+      { x: 13, y: 7 }, { x: 13, y: 6 }, { x: 13, y: 5 }, { x: 13, y: 4 },
+      { x: 13, y: 3 }, { x: 13, y: 2 }, { x: 13, y: 1 }, { x: 13, y: 0 },
     ],
     length: 2,
     progress: 10,
@@ -75,12 +84,25 @@ let nextDirection = { x: 1, y: 0 };
 let food = { x: 0, y: 0 };
 let score = 3;
 let bestScore = 3;
-let applesEaten = 0;
 let gameStarted = false;
 let gameOver = false;
+let gamePaused = false;
 let loopId;
-let enemySnakes = [];
 let tickCount = 0;
+let enemySnakes = [];
+let touchStart = null;
+
+function getCssVariable(name) {
+  return getComputedStyle(document.body).getPropertyValue(name).trim();
+}
+
+function announce(message) {
+  statusElement.textContent = "";
+  statusCard.textContent = message;
+  window.setTimeout(() => {
+    statusElement.textContent = message;
+  }, 10);
+}
 
 function getStoredBestScore() {
   const storedValue = window.localStorage.getItem(bestScoreKey);
@@ -92,10 +114,47 @@ function setBestScore(value) {
   window.localStorage.setItem(bestScoreKey, String(value));
 }
 
+function getStoredContrastMode() {
+  return window.localStorage.getItem(contrastModeKey) === "true";
+}
+
+function setContrastMode(enabled) {
+  document.body.classList.toggle("high-contrast", enabled);
+  contrastToggle.setAttribute("aria-pressed", String(enabled));
+  contrastToggle.textContent = enabled ? "Vysoký kontrast zapnutý" : "Vysoký kontrast vypnutý";
+  window.localStorage.setItem(contrastModeKey, String(enabled));
+}
+
+function updatePauseButton() {
+  pauseButton.textContent = gamePaused ? "Pokračovat" : "Pozastavit";
+  pauseButton.setAttribute("aria-pressed", String(gamePaused));
+}
+
 function updateHud() {
   scoreElement.textContent = String(score);
   bestScoreElement.textContent = String(bestScore);
   snakeLengthElement.textContent = String(snake.length);
+}
+
+function updateBoardLabel() {
+  let state = "hra čeká na spuštění";
+
+  if (gameStarted) {
+    state = "hra běží";
+  }
+
+  if (gamePaused) {
+    state = "hra je pozastavena";
+  }
+
+  if (gameOver) {
+    state = "hra skončila";
+  }
+
+  board.setAttribute(
+    "aria-label",
+    `Herní plocha Snake, ${state}. Skóre ${score}, délka hada ${snake.length}.`,
+  );
 }
 
 function randomPosition() {
@@ -105,62 +164,23 @@ function randomPosition() {
   };
 }
 
+function isOccupied(position) {
+  const onPlayer = snake.some((segment) => segment.x === position.x && segment.y === position.y);
+  const onEnemy = enemySnakes.some((enemy) =>
+    enemy.segments.some((segment) => segment.x === position.x && segment.y === position.y),
+  );
+
+  return onPlayer || onEnemy;
+}
+
 function placeFood() {
   let newFood = randomPosition();
 
-  while (
-    snake.some((segment) => segment.x === newFood.x && segment.y === newFood.y) ||
-    enemySnakes.some((enemy) =>
-      enemy.segments.some((segment) => segment.x === newFood.x && segment.y === newFood.y),
-    )
-  ) {
+  while (isOccupied(newFood)) {
     newFood = randomPosition();
   }
 
   food = newFood;
-}
-
-function showOverlay(title, text, buttonLabel) {
-  overlayTitle.textContent = title;
-  overlayText.textContent = text;
-  overlayButton.textContent = buttonLabel;
-  overlay.classList.remove("hidden");
-}
-
-function hideOverlay() {
-  overlay.classList.add("hidden");
-}
-
-function resetGame() {
-  snake = [
-    { x: 7, y: 7 },
-    { x: 6, y: 7 },
-    { x: 5, y: 7 },
-  ];
-  direction = { x: 1, y: 0 };
-  nextDirection = { x: 1, y: 0 };
-  score = 3;
-  applesEaten = 0;
-  tickCount = 0;
-  gameStarted = false;
-  gameOver = false;
-  clearTimeout(loopId);
-  enemySnakes = createEnemySnakes();
-  placeFood();
-  updateHud();
-  showOverlay(
-    "Stiskni šipku pro start",
-    "Ovládání: šipky nebo W, A, S, D. Dojeď k jablku, vyhni se zdi a pozor na střet hlava na hlavu s cizími hady.",
-    "Začít",
-  );
-  draw();
-}
-
-function createEnemySnakes() {
-  return enemyTemplates.map((template) => ({
-    ...template,
-    segments: getEnemySegments(template.path, template.progress, template.length),
-  }));
 }
 
 function getEnemySegments(path, progress, length) {
@@ -174,80 +194,17 @@ function getEnemySegments(path, progress, length) {
   return segments;
 }
 
-function drawBackground() {
-  context.clearRect(0, 0, board.width, board.height);
-  context.fillStyle = "#3a8d55";
-  context.fillRect(0, 0, board.width, board.height);
-
-  for (let y = 0; y < tileCount; y += 1) {
-    for (let x = 0; x < tileCount; x += 1) {
-      const left = x * tileSize;
-      const top = y * tileSize;
-      const midX = left + tileSize / 2;
-      const tint = (x + y) % 2 === 0 ? "#b9e058" : "#5caf63";
-
-      context.fillStyle = tint;
-      context.beginPath();
-      context.moveTo(midX, top + 2);
-      context.lineTo(left + tileSize - 2, top + tileSize * 0.25);
-      context.lineTo(left + tileSize - 2, top + tileSize * 0.75);
-      context.lineTo(midX, top + tileSize - 2);
-      context.lineTo(left + 2, top + tileSize * 0.75);
-      context.lineTo(left + 2, top + tileSize * 0.25);
-      context.closePath();
-      context.fill();
-
-      context.strokeStyle = "rgba(58, 120, 70, 0.2)";
-      context.lineWidth = 2;
-      context.stroke();
-    }
-  }
-
-  const streaks = [
-    { x: 38, y: 82, width: 118, angle: -0.52 },
-    { x: 218, y: 112, width: 106, angle: -0.6 },
-    { x: 412, y: 56, width: 130, angle: -0.42 },
-    { x: 456, y: 318, width: 122, angle: -0.58 },
-    { x: 88, y: 448, width: 112, angle: -0.38 },
-  ];
-
-  streaks.forEach((streak) => {
-    context.save();
-    context.translate(streak.x, streak.y);
-    context.rotate(streak.angle);
-    const gradient = context.createLinearGradient(0, 0, streak.width, 0);
-    gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
-    gradient.addColorStop(0.5, "rgba(206, 244, 255, 0.78)");
-    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, streak.width, 10);
-    context.restore();
-  });
-
-  drawHoles();
-}
-
-function drawHoles() {
-  const holes = [
-    { x: -0.2, y: 2.1 },
-    { x: 15.2, y: 2.1 },
-    { x: -0.25, y: 7.1 },
-    { x: 15.2, y: 7.1 },
-    { x: 3.1, y: 15.15 },
-    { x: 10.15, y: -0.15 },
-  ];
-
-  holes.forEach((hole) => {
-    const px = hole.x * tileSize;
-    const py = hole.y * tileSize;
-    const gradient = context.createRadialGradient(px, py, 6, px, py, tileSize * 0.45);
-    gradient.addColorStop(0, "#102c1a");
-    gradient.addColorStop(1, "rgba(12, 28, 18, 0)");
-    context.fillStyle = gradient;
-    context.beginPath();
-    context.arc(px, py, tileSize * 0.42, 0, Math.PI * 2);
-    context.fill();
-  });
+function createEnemySnakes() {
+  return enemyTemplates.map((template) => ({
+    ...template,
+    colors: {
+      body: getCssVariable("--enemy"),
+      bodyShadow: getCssVariable("--enemy-dark"),
+      eye: "#111111",
+      tongue: "#6b2a21",
+    },
+    segments: getEnemySegments(template.path, template.progress, template.length),
+  }));
 }
 
 function getCenter(position) {
@@ -257,151 +214,76 @@ function getCenter(position) {
   };
 }
 
+function resetGame(announceReset = true) {
+  snake = [
+    { x: 7, y: 7 },
+    { x: 6, y: 7 },
+    { x: 5, y: 7 },
+  ];
+  direction = { x: 1, y: 0 };
+  nextDirection = { x: 1, y: 0 };
+  score = 3;
+  tickCount = 0;
+  gameStarted = false;
+  gameOver = false;
+  gamePaused = false;
+  clearTimeout(loopId);
+  enemySnakes = createEnemySnakes();
+  placeFood();
+  updateHud();
+  updatePauseButton();
+  updateBoardLabel();
+  draw();
+  statusCard.textContent = "Hra čeká na spuštění. Použij šipky, W, A, S, D, tlačítka nebo tah po herní ploše.";
+
+  if (announceReset) {
+    announce("Nová hra připravena. Začni směrem, tlačítkem nebo dotykovým tahem.");
+  }
+}
+
+function drawBackground() {
+  context.clearRect(0, 0, board.width, board.height);
+  context.fillStyle = getCssVariable("--board-bg");
+  context.fillRect(0, 0, board.width, board.height);
+
+  for (let y = 0; y < tileCount; y += 1) {
+    for (let x = 0; x < tileCount; x += 1) {
+      context.fillStyle = (x + y) % 2 === 0
+        ? getCssVariable("--board-tile-a")
+        : getCssVariable("--board-tile-b");
+      context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+    }
+  }
+}
+
 function drawFood() {
   const center = getCenter(food);
-  const appleRadius = tileSize * 0.26;
-  const gradient = context.createRadialGradient(
-    center.x - appleRadius * 0.35,
-    center.y - appleRadius * 0.45,
-    appleRadius * 0.12,
-    center.x,
-    center.y,
-    appleRadius * 1.25,
-  );
+  const appleRadius = tileSize * 0.22;
 
-  gradient.addColorStop(0, "#ff8a73");
-  gradient.addColorStop(0.55, "#f04624");
-  gradient.addColorStop(1, "#b41d11");
-
-  context.shadowColor = "rgba(229, 48, 23, 0.42)";
-  context.shadowBlur = 24;
-  context.fillStyle = gradient;
+  context.fillStyle = getCssVariable("--food");
   context.beginPath();
   context.arc(center.x, center.y, appleRadius, 0, Math.PI * 2);
   context.fill();
-  context.shadowBlur = 0;
 
-  context.fillStyle = "rgba(255, 255, 255, 0.5)";
+  context.strokeStyle = "#5f3d1f";
+  context.lineWidth = 3;
   context.beginPath();
-  context.ellipse(
-    center.x - appleRadius * 0.38,
-    center.y - appleRadius * 0.32,
-    appleRadius * 0.2,
-    appleRadius * 0.14,
-    -0.6,
-    0,
-    Math.PI * 2,
-  );
-  context.fill();
-
-  context.fillStyle = "rgba(117, 48, 131, 0.18)";
-  context.beginPath();
-  context.ellipse(
-    center.x - appleRadius * 0.1,
-    center.y + appleRadius * 0.68,
-    appleRadius * 0.38,
-    appleRadius * 0.16,
-    -0.2,
-    0,
-    Math.PI * 2,
-  );
-  context.fill();
-
-  context.strokeStyle = "#6f3519";
-  context.lineWidth = 4;
-  context.beginPath();
-  context.moveTo(center.x + 2, center.y - appleRadius * 0.72);
-  context.lineTo(center.x + appleRadius * 0.14, center.y - appleRadius * 1.2);
+  context.moveTo(center.x, center.y - appleRadius * 0.7);
+  context.lineTo(center.x + 1, center.y - appleRadius * 1.15);
   context.stroke();
 
-  context.fillStyle = "#1ea55f";
+  context.fillStyle = getCssVariable("--food-leaf");
   context.beginPath();
   context.ellipse(
-    center.x + appleRadius * 0.28,
+    center.x + appleRadius * 0.25,
     center.y - appleRadius * 0.92,
-    appleRadius * 0.24,
-    appleRadius * 0.12,
-    -0.45,
+    appleRadius * 0.18,
+    appleRadius * 0.1,
+    -0.3,
     0,
     Math.PI * 2,
   );
   context.fill();
-}
-
-function drawEnemySnakes() {
-  enemySnakes.forEach((enemy) => {
-    drawSnakeBody(enemy.segments, enemy.colors, true);
-  });
-}
-
-function drawSnakeBody(segments, colors, isEnemy = false) {
-  const visibleSegments = segments.filter(
-    (segment) =>
-      segment.x >= 0 &&
-      segment.x < tileCount &&
-      segment.y >= 0 &&
-      segment.y < tileCount,
-  );
-
-  if (visibleSegments.length === 0) {
-    return;
-  }
-
-  const points = visibleSegments.map((segment) => getCenter(segment));
-  const width = tileSize * 0.64;
-  const highlightWidth = tileSize * 0.14;
-
-  context.lineCap = "round";
-  context.lineJoin = "round";
-  context.shadowColor = isEnemy ? "rgba(0, 0, 0, 0.08)" : "rgba(48, 113, 255, 0.42)";
-  context.shadowBlur = isEnemy ? 4 : 26;
-
-  context.strokeStyle = colors.body;
-  context.lineWidth = width;
-  context.beginPath();
-  context.moveTo(points[points.length - 1].x, points[points.length - 1].y);
-  for (let index = points.length - 2; index >= 0; index -= 1) {
-    context.lineTo(points[index].x, points[index].y);
-  }
-  context.stroke();
-
-  context.shadowBlur = 0;
-  context.strokeStyle = colors.highlight;
-  context.lineWidth = highlightWidth;
-  context.beginPath();
-  context.moveTo(points[points.length - 1].x - 5, points[points.length - 1].y - 5);
-  for (let index = points.length - 2; index >= 0; index -= 1) {
-    context.lineTo(points[index].x - 5, points[index].y - 5);
-  }
-  context.stroke();
-
-  for (let index = visibleSegments.length - 1; index > 0; index -= 1) {
-    const center = points[index];
-    context.fillStyle = colors.bodyShadow;
-    context.beginPath();
-    context.arc(center.x, center.y, width * 0.48, 0, Math.PI * 2);
-    context.fill();
-    context.fillStyle = colors.highlight;
-    context.beginPath();
-    context.arc(center.x - 6, center.y - 6, width * 0.12, 0, Math.PI * 2);
-    context.fill();
-  }
-
-  drawSnakeHead(visibleSegments, colors, isEnemy);
-}
-
-function drawSnake() {
-  drawSnakeBody(
-    snake,
-    {
-      body: "#3a63ff",
-      bodyShadow: "rgba(42, 76, 221, 0.98)",
-      highlight: "rgba(205, 236, 255, 0.86)",
-      eye: "#070d1d",
-      tongue: "#d64a24",
-    },
-    false,
-  );
 }
 
 function getHeadDirection(segments) {
@@ -421,32 +303,14 @@ function getHeadDirection(segments) {
   return { x: dx, y: dy };
 }
 
-function drawSnakeHead(segments, colors, isEnemy = false) {
+function drawSnakeHead(segments, colors, movementVector) {
   const head = getCenter(segments[0]);
-  const vector = isEnemy ? getHeadDirection(segments) : direction;
-  const angle = Math.atan2(vector.y, vector.x);
-  const radius = tileSize * 0.48;
-  const headGradient = context.createRadialGradient(
-    head.x - radius * 0.28,
-    head.y - radius * 0.28,
-    radius * 0.18,
-    head.x,
-    head.y,
-    radius,
-  );
-  const headHighlight = isEnemy
-    ? colors.highlight.replace("0.18", "0.34").replace("0.16", "0.3").replace("0.15", "0.28")
-    : "rgba(225, 244, 255, 0.98)";
-  headGradient.addColorStop(0, headHighlight);
-  headGradient.addColorStop(1, colors.body);
-  context.fillStyle = headGradient;
+  const angle = Math.atan2(movementVector.y, movementVector.x);
+  const radius = tileSize * 0.42;
+
+  context.fillStyle = colors.body;
   context.beginPath();
   context.arc(head.x, head.y, radius, 0, Math.PI * 2);
-  context.fill();
-
-  context.fillStyle = isEnemy ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0.26)";
-  context.beginPath();
-  context.arc(head.x - radius * 0.24, head.y - radius * 0.28, radius * 0.16, 0, Math.PI * 2);
   context.fill();
 
   const sideOffsetX = Math.cos(angle + Math.PI / 2) * radius * 0.28;
@@ -458,38 +322,19 @@ function drawSnakeHead(segments, colors, isEnemy = false) {
     { x: head.x + sideOffsetX - forwardX, y: head.y + sideOffsetY - forwardY },
     { x: head.x - sideOffsetX - forwardX, y: head.y - sideOffsetY - forwardY },
   ].forEach((eye) => {
-    context.fillStyle = "#fffef9";
+    context.fillStyle = "#ffffff";
     context.beginPath();
-    context.ellipse(
-      eye.x,
-      eye.y,
-      radius * (isEnemy ? 0.18 : 0.22),
-      radius * (isEnemy ? 0.24 : 0.3),
-      angle,
-      0,
-      Math.PI * 2,
-    );
+    context.ellipse(eye.x, eye.y, radius * 0.18, radius * 0.24, angle, 0, Math.PI * 2);
     context.fill();
 
     context.fillStyle = colors.eye;
     context.beginPath();
     context.ellipse(
-      eye.x + Math.cos(angle) * 5,
-      eye.y + Math.sin(angle) * 5,
-      radius * (isEnemy ? 0.09 : 0.11),
-      radius * (isEnemy ? 0.13 : 0.16),
+      eye.x + Math.cos(angle) * 4,
+      eye.y + Math.sin(angle) * 4,
+      radius * 0.08,
+      radius * 0.12,
       angle,
-      0,
-      Math.PI * 2,
-    );
-    context.fill();
-
-    context.fillStyle = "rgba(255, 255, 255, 0.86)";
-    context.beginPath();
-    context.arc(
-      eye.x + Math.cos(angle) * 8 - 1,
-      eye.y + Math.sin(angle) * 8 - 4,
-      radius * 0.04,
       0,
       Math.PI * 2,
     );
@@ -497,56 +342,129 @@ function drawSnakeHead(segments, colors, isEnemy = false) {
   });
 
   context.strokeStyle = colors.tongue;
-  context.lineWidth = isEnemy ? 3 : 4;
+  context.lineWidth = 2;
   context.beginPath();
   context.moveTo(
-    head.x + Math.cos(angle) * radius * 0.72,
-    head.y + Math.sin(angle) * radius * 0.72,
+    head.x + Math.cos(angle) * radius * 0.7,
+    head.y + Math.sin(angle) * radius * 0.7,
   );
   context.lineTo(
-    head.x + Math.cos(angle) * radius * 1.05,
-    head.y + Math.sin(angle) * radius * 1.05,
+    head.x + Math.cos(angle) * radius * 1,
+    head.y + Math.sin(angle) * radius * 1,
   );
   context.lineTo(
-    head.x + Math.cos(angle + 0.22) * radius * 1.2,
-    head.y + Math.sin(angle + 0.22) * radius * 1.2,
+    head.x + Math.cos(angle + 0.2) * radius * 1.12,
+    head.y + Math.sin(angle + 0.2) * radius * 1.12,
   );
   context.moveTo(
-    head.x + Math.cos(angle) * radius * 1.05,
-    head.y + Math.sin(angle) * radius * 1.05,
+    head.x + Math.cos(angle) * radius * 1,
+    head.y + Math.sin(angle) * radius * 1,
   );
   context.lineTo(
-    head.x + Math.cos(angle - 0.22) * radius * 1.2,
-    head.y + Math.sin(angle - 0.22) * radius * 1.2,
+    head.x + Math.cos(angle - 0.2) * radius * 1.12,
+    head.y + Math.sin(angle - 0.2) * radius * 1.12,
   );
   context.stroke();
 }
 
+function drawSnakeBody(segments, colors, movementVector) {
+  const visibleSegments = segments.filter(
+    (segment) =>
+      segment.x >= 0 &&
+      segment.x < tileCount &&
+      segment.y >= 0 &&
+      segment.y < tileCount,
+  );
+
+  if (visibleSegments.length === 0) {
+    return;
+  }
+
+  const points = visibleSegments.map((segment) => getCenter(segment));
+  const width = tileSize * 0.62;
+
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.strokeStyle = colors.body;
+  context.lineWidth = width;
+  context.beginPath();
+  context.moveTo(points[points.length - 1].x, points[points.length - 1].y);
+
+  for (let index = points.length - 2; index >= 0; index -= 1) {
+    context.lineTo(points[index].x, points[index].y);
+  }
+
+  context.stroke();
+
+  for (let index = visibleSegments.length - 1; index > 0; index -= 1) {
+    const center = points[index];
+    context.fillStyle = colors.bodyShadow;
+    context.beginPath();
+    context.arc(center.x, center.y, width * 0.44, 0, Math.PI * 2);
+    context.fill();
+  }
+
+  drawSnakeHead(visibleSegments, colors, movementVector);
+}
+
+function drawEnemies() {
+  enemySnakes.forEach((enemy) => {
+    drawSnakeBody(enemy.segments, enemy.colors, getHeadDirection(enemy.segments));
+  });
+}
+
+function drawPlayer() {
+  drawSnakeBody(
+    snake,
+    {
+      body: getCssVariable("--player"),
+      bodyShadow: getCssVariable("--player-dark"),
+      eye: "#07101e",
+      tongue: "#8b1e14",
+    },
+    direction,
+  );
+}
+
 function draw() {
   drawBackground();
-  drawEnemySnakes();
+  drawEnemies();
   drawFood();
-  drawSnake();
+  drawPlayer();
+}
+
+function moveEnemySnakes() {
+  enemySnakes = enemySnakes.map((enemy) => {
+    const nextProgress = (enemy.progress + 1) % enemy.path.length;
+
+    return {
+      ...enemy,
+      progress: nextProgress,
+      segments: getEnemySegments(enemy.path, nextProgress, enemy.length),
+    };
+  });
 }
 
 function endGame() {
   gameOver = true;
+  gamePaused = false;
   clearTimeout(loopId);
 
   if (score > bestScore) {
     setBestScore(score);
+    announce(`Konec hry. Nový rekord ${score}.`);
+  } else {
+    announce(`Konec hry. Skóre ${score}.`);
   }
 
   updateHud();
-  showOverlay(
-    "Konec hry",
-    "Cizí had tě zastavil. Klikni na Restart nebo stiskni šipku pro novou hru.",
-    "Hrát znovu",
-  );
+  updatePauseButton();
+  updateBoardLabel();
+  statusCard.textContent = "Konec hry. Klikni na Restart nebo použij směr pro novou hru.";
 }
 
 function tick() {
-  if (gameOver || !gameStarted) {
+  if (gameOver || !gameStarted || gamePaused) {
     return;
   }
 
@@ -577,8 +495,8 @@ function tick() {
   snake.unshift(head);
 
   if (head.x === food.x && head.y === food.y) {
-    applesEaten += 1;
     placeFood();
+    announce(`Jablko sebráno. Skóre ${snake.length}.`);
   } else {
     snake.pop();
   }
@@ -599,78 +517,159 @@ function tick() {
   }
 
   updateHud();
+  updateBoardLabel();
   draw();
   loopId = window.setTimeout(tick, gameSpeed);
 }
 
-function moveEnemySnakes() {
-  enemySnakes = enemySnakes.map((enemy) => {
-    const nextProgress = (enemy.progress + 1) % enemy.path.length;
-    return {
-      ...enemy,
-      progress: nextProgress,
-      segments: getEnemySegments(enemy.path, nextProgress, enemy.length),
-    };
-  });
+function startGame() {
+  if (gameOver) {
+    resetGame(false);
+  }
+
+  if (gameStarted && !gamePaused) {
+    return;
+  }
+
+  gameStarted = true;
+  gamePaused = false;
+  updatePauseButton();
+  updateBoardLabel();
+  board.focus();
+  announce("Hra spuštěna.");
+  tick();
+}
+
+function pauseGame() {
+  if (!gameStarted || gameOver) {
+    return;
+  }
+
+  gamePaused = true;
+  clearTimeout(loopId);
+  updatePauseButton();
+  updateBoardLabel();
+  announce("Hra je pozastavena.");
+}
+
+function togglePause() {
+  if (!gameStarted || gameOver) {
+    return;
+  }
+
+  if (gamePaused) {
+    gamePaused = false;
+    updatePauseButton();
+    updateBoardLabel();
+    board.focus();
+    announce("Hra pokračuje.");
+    tick();
+    return;
+  }
+
+  pauseGame();
 }
 
 function setDirection(newDirection) {
   const reversingHorizontally = newDirection.x !== 0 && newDirection.x === -direction.x;
   const reversingVertically = newDirection.y !== 0 && newDirection.y === -direction.y;
 
-  if (gameStarted && (reversingHorizontally || reversingVertically)) {
+  if (gameStarted && !gamePaused && (reversingHorizontally || reversingVertically)) {
     return;
   }
 
   if (gameOver) {
-    resetGame();
+    resetGame(false);
   }
 
   nextDirection = newDirection;
 
-  if (!gameStarted) {
-    gameStarted = true;
-    hideOverlay();
-    tick();
+  if (!gameStarted || gamePaused) {
+    startGame();
   }
 }
 
-function handleKeydown(event) {
-  const directions = {
-    ArrowUp: { x: 0, y: -1 },
-    ArrowDown: { x: 0, y: 1 },
-    ArrowLeft: { x: -1, y: 0 },
-    ArrowRight: { x: 1, y: 0 },
-    w: { x: 0, y: -1 },
-    s: { x: 0, y: 1 },
-    a: { x: -1, y: 0 },
-    d: { x: 1, y: 0 },
-  };
-
-  const newDirection = directions[event.key];
+function handleDirectionalInput(directionName) {
+  const newDirection = directions[directionName];
 
   if (!newDirection) {
     return;
   }
 
-  event.preventDefault();
   setDirection(newDirection);
 }
 
-function handleOverlayButton() {
-  if (gameOver) {
-    resetGame();
+function handleKeydown(event) {
+  const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+
+  if (key === " " || key === "p") {
+    event.preventDefault();
+    togglePause();
     return;
   }
 
-  hideOverlay();
-  gameStarted = true;
-  tick();
+  if (!directions[key]) {
+    return;
+  }
+
+  event.preventDefault();
+  handleDirectionalInput(key);
+}
+
+function handleContrastToggle() {
+  const enabled = !document.body.classList.contains("high-contrast");
+  setContrastMode(enabled);
+  draw();
+  announce(enabled ? "Vysoký kontrast zapnutý." : "Vysoký kontrast vypnutý.");
+}
+
+function handleTouchStart(event) {
+  const touch = event.changedTouches[0];
+  touchStart = { x: touch.clientX, y: touch.clientY };
+}
+
+function handleTouchEnd(event) {
+  if (!touchStart) {
+    return;
+  }
+
+  const touch = event.changedTouches[0];
+  const dx = touch.clientX - touchStart.x;
+  const dy = touch.clientY - touchStart.y;
+  touchStart = null;
+
+  if (Math.abs(dx) < swipeThreshold && Math.abs(dy) < swipeThreshold) {
+    return;
+  }
+
+  if (Math.abs(dx) > Math.abs(dy)) {
+    handleDirectionalInput(dx > 0 ? "right" : "left");
+  } else {
+    handleDirectionalInput(dy > 0 ? "down" : "up");
+  }
+
+  board.focus();
 }
 
 document.addEventListener("keydown", handleKeydown);
-restartButton.addEventListener("click", resetGame);
-overlayButton.addEventListener("click", handleOverlayButton);
+restartButton.addEventListener("click", () => {
+  resetGame();
+  board.focus();
+});
+pauseButton.addEventListener("click", togglePause);
+contrastToggle.addEventListener("click", handleContrastToggle);
+
+controlButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    handleDirectionalInput(button.dataset.direction);
+    board.focus();
+  });
+});
+
+board.addEventListener("touchstart", handleTouchStart, { passive: true });
+board.addEventListener("touchend", handleTouchEnd, { passive: true });
 
 bestScore = getStoredBestScore();
-resetGame();
+setContrastMode(getStoredContrastMode());
+resetGame(false);
+announce("Hra Snake je připravena.");
