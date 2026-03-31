@@ -121,12 +121,12 @@ function getStoredContrastMode() {
 function setContrastMode(enabled) {
   document.body.classList.toggle("high-contrast", enabled);
   contrastToggle.setAttribute("aria-pressed", String(enabled));
-  contrastToggle.textContent = enabled ? "Vysoký kontrast zapnutý" : "Vysoký kontrast vypnutý";
+  contrastToggle.textContent = enabled ? "High contrast on" : "High contrast off";
   window.localStorage.setItem(contrastModeKey, String(enabled));
 }
 
 function updatePauseButton() {
-  pauseButton.textContent = gamePaused ? "Pokračovat" : "Pozastavit";
+  pauseButton.textContent = gamePaused ? "Resume" : "Pause";
   pauseButton.setAttribute("aria-pressed", String(gamePaused));
 }
 
@@ -137,23 +137,23 @@ function updateHud() {
 }
 
 function updateBoardLabel() {
-  let state = "hra čeká na spuštění";
+  let state = "game is waiting to start";
 
   if (gameStarted) {
-    state = "hra běží";
+    state = "game is running";
   }
 
   if (gamePaused) {
-    state = "hra je pozastavena";
+    state = "game is paused";
   }
 
   if (gameOver) {
-    state = "hra skončila";
+    state = "game is over";
   }
 
   board.setAttribute(
     "aria-label",
-    `Herní plocha Snake, ${state}. Skóre ${score}, délka hada ${snake.length}.`,
+    `Snake game board, ${state}. Score ${score}, snake length ${snake.length}.`,
   );
 }
 
@@ -234,10 +234,10 @@ function resetGame(announceReset = true) {
   updatePauseButton();
   updateBoardLabel();
   draw();
-  statusCard.textContent = "Hra čeká na spuštění. Swipni prstem doprava, doleva, nahoru nebo dolů, aby sis zahrál(a), nebo použij šipky či tlačítka.";
+  statusCard.textContent = "The game is waiting to start. Swipe right, left, up, or down to play, or use the arrow keys or buttons.";
 
   if (announceReset) {
-    announce("Nová hra připravena. Swipni prstem doprava, doleva, nahoru nebo dolů, nebo použij šipky či tlačítka.");
+    announce("A new game is ready. Swipe right, left, up, or down, or use the arrow keys or buttons.");
   }
 }
 
@@ -452,15 +452,15 @@ function endGame() {
 
   if (score > bestScore) {
     setBestScore(score);
-    announce(`Konec hry. Nový rekord ${score}.`);
+    announce(`Game over. New high score: ${score}.`);
   } else {
-    announce(`Konec hry. Skóre ${score}.`);
+    announce(`Game over. Score: ${score}.`);
   }
 
   updateHud();
   updatePauseButton();
   updateBoardLabel();
-  statusCard.textContent = "Konec hry. Klikni na Restart, nebo swipni prstem doprava, doleva, nahoru či dolů pro novou hru.";
+  statusCard.textContent = "Game over. Tap Restart, or swipe right, left, up, or down to start a new game.";
 }
 
 function tick() {
@@ -496,7 +496,7 @@ function tick() {
 
   if (head.x === food.x && head.y === food.y) {
     placeFood();
-    announce(`Jablko sebráno. Skóre ${snake.length}.`);
+    announce(`Apple collected. Score: ${snake.length}.`);
   } else {
     snake.pop();
   }
@@ -536,7 +536,7 @@ function startGame() {
   updatePauseButton();
   updateBoardLabel();
   board.focus();
-  announce("Hra spuštěna.");
+  announce("Game started.");
   tick();
 }
 
@@ -549,7 +549,7 @@ function pauseGame() {
   clearTimeout(loopId);
   updatePauseButton();
   updateBoardLabel();
-  announce("Hra je pozastavena.");
+  announce("Game paused.");
 }
 
 function togglePause() {
@@ -562,7 +562,7 @@ function togglePause() {
     updatePauseButton();
     updateBoardLabel();
     board.focus();
-    announce("Hra pokračuje.");
+    announce("Game resumed.");
     tick();
     return;
   }
@@ -620,7 +620,7 @@ function handleContrastToggle() {
   const enabled = !document.body.classList.contains("high-contrast");
   setContrastMode(enabled);
   draw();
-  announce(enabled ? "Vysoký kontrast zapnutý." : "Vysoký kontrast vypnutý.");
+  announce(enabled ? "High contrast enabled." : "High contrast disabled.");
 }
 
 function handleTouchStart(event) {
@@ -672,4 +672,4 @@ board.addEventListener("touchend", handleTouchEnd, { passive: true });
 bestScore = getStoredBestScore();
 setContrastMode(getStoredContrastMode());
 resetGame(false);
-announce("Hra Snake je připravena.");
+announce("Snake is ready.");

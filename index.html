@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Týnky hra Snake</title>
+  <title>Tynka's Snake Game</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <a class="skip-link" href="#game-region">Přeskočit na hru</a>
+  <a class="skip-link" href="#game-region">Skip to game</a>
 
   <main class="page">
     <section class="game-card" aria-labelledby="page-title">
       <header class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">Přístupná HTML hra</p>
-          <h1 id="page-title">Týnky hra Snake</h1>
+          <p class="eyebrow">Accessible HTML game</p>
+          <h1 id="page-title">Tynka's Snake Game</h1>
           <p class="hero-text">
-            Klidná a přístupná verze hry Snake s ovládáním klávesnicí, tlačítky i dotykovým tahem.
+            A calm and accessible version of Snake with keyboard, button, and touch controls.
           </p>
           <div class="hero-instructions" id="game-instructions">
-            <p>Ovládání: šipky nebo W, A, S, D. Na mobilu a tabletu můžeš použít tlačítka nebo tah po herní ploše.</p>
-            <p>Mezerník nebo klávesa P hru pozastaví. Tlačítko Restart připraví novou hru na stejném místě.</p>
+            <p>Controls: arrow keys or W, A, S, D. On mobile and tablet, you can use buttons or swipe on the game board.</p>
+            <p>Spacebar or the P key pauses the game. The Restart button prepares a new game in the same starting position.</p>
           </div>
         </div>
 
@@ -32,33 +32,33 @@
         </div>
       </header>
 
-      <section class="settings" aria-label="Nastavení přístupnosti">
+      <section class="settings" aria-label="Accessibility settings">
         <button class="toggle-button" id="contrast-toggle" type="button" aria-pressed="false">
-          Vysoký kontrast vypnutý
+          High contrast off
         </button>
       </section>
 
-      <section class="hud" aria-label="Stav hry">
+      <section class="hud" aria-label="Game status">
         <article class="hud-box">
-          <span class="hud-label">Skóre</span>
+          <span class="hud-label">Score</span>
           <strong class="hud-value" id="score">3</strong>
         </article>
         <article class="hud-box">
-          <span class="hud-label">Rekord</span>
+          <span class="hud-label">Best</span>
           <strong class="hud-value" id="best-score">3</strong>
         </article>
         <article class="hud-box">
-          <span class="hud-label">Délka hada</span>
+          <span class="hud-label">Snake Length</span>
           <strong class="hud-value" id="snake-length">3</strong>
         </article>
         <button class="restart-button" id="restart-button" type="button">Restart</button>
       </section>
 
       <section class="board-wrap" id="game-region" aria-labelledby="board-heading">
-        <h2 class="sr-only" id="board-heading">Herní plocha Snake</h2>
+        <h2 class="sr-only" id="board-heading">Snake game board</h2>
         <p class="sr-only" id="board-description">
-          Hra je ovladatelná klávesnicí, tlačítky i dotykem. Po zaměření herní plochy používej šipky nebo klávesy W, A, S, D.
-          Na dotykovém zařízení táhni po ploše ve směru pohybu. Mezerník nebo P hru pozastaví.
+          The game can be controlled with a keyboard, buttons, or touch. After focusing the game board, use the arrow keys or W, A, S, D.
+          On touch devices, swipe in the direction you want to move. Spacebar or P pauses the game.
         </p>
         <p class="sr-only" id="status" aria-live="polite" aria-atomic="true"></p>
 
@@ -68,25 +68,25 @@
           width="600"
           height="600"
           tabindex="0"
-          aria-label="Herní plocha Snake"
+          aria-label="Snake game board"
           aria-describedby="board-description game-instructions"
         >
-          Váš prohlížeč nepodporuje canvas. Hru lze ovládat šipkami nebo klávesami W, A, S, D.
+          Your browser does not support canvas. The game can be controlled with the arrow keys or W, A, S, D.
         </canvas>
 
         <section class="game-status" aria-labelledby="status-heading">
-          <h2 class="sr-only" id="status-heading">Stav hry</h2>
+          <h2 class="sr-only" id="status-heading">Game state</h2>
           <p class="status-card" id="status-card">
-            Hra čeká na spuštění. Použij šipky, W, A, S, D, tlačítka nebo tah po herní ploše.
+            The game is ready to start. Use the arrow keys, W, A, S, D, buttons, or swipe on the game board.
           </p>
         </section>
 
-        <section class="controls" aria-label="Dotykové a klikatelné ovládání">
-          <button class="control-button control-up" type="button" data-direction="up" aria-label="Nahoru">Nahoru</button>
-          <button class="control-button control-left" type="button" data-direction="left" aria-label="Doleva">Doleva</button>
-          <button class="control-button control-pause" id="pause-button" type="button" aria-pressed="false">Pozastavit</button>
-          <button class="control-button control-right" type="button" data-direction="right" aria-label="Doprava">Doprava</button>
-          <button class="control-button control-down" type="button" data-direction="down" aria-label="Dolů">Dolů</button>
+        <section class="controls" aria-label="Touch and clickable controls">
+          <button class="control-button control-up" type="button" data-direction="up" aria-label="Up">Up</button>
+          <button class="control-button control-left" type="button" data-direction="left" aria-label="Left">Left</button>
+          <button class="control-button control-pause" id="pause-button" type="button" aria-pressed="false">Pause</button>
+          <button class="control-button control-right" type="button" data-direction="right" aria-label="Right">Right</button>
+          <button class="control-button control-down" type="button" data-direction="down" aria-label="Down">Down</button>
         </section>
       </section>
     </section>
