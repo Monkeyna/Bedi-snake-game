@@ -460,7 +460,7 @@ function endGame() {
   updateHud();
   updatePauseButton();
   updateBoardLabel();
-  statusCard.textContent = "Konec hry. Klikni na Restart nebo použij směr pro novou hru.";
+  statusCard.textContent = "Konec hry. Klikni na Restart, nebo swipni prstem doprava, doleva, nahoru či dolů pro novou hru.";
 }
 
 function tick() {
