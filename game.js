@@ -8,7 +8,6 @@ const statusElement = document.querySelector("#status");
 const statusCard = document.querySelector("#status-card");
 const pauseButton = document.querySelector("#pause-button");
 const controlButtons = document.querySelectorAll(".control-button[data-direction]");
-const touchZoneButtons = document.querySelectorAll(".touch-zone[data-direction]");
 const contrastToggle = document.querySelector("#contrast-toggle");
 
 const tileCount = 15;
@@ -235,10 +234,10 @@ function resetGame(announceReset = true) {
   updatePauseButton();
   updateBoardLabel();
   draw();
-  statusCard.textContent = "Hra čeká na spuštění. Použij šipky, W, A, S, D, tlačítka nebo tah po herní ploše.";
+  statusCard.textContent = "Hra čeká na spuštění. Swipni prstem doprava, doleva, nahoru nebo dolů, aby sis zahrál(a), nebo použij šipky či tlačítka.";
 
   if (announceReset) {
-    announce("Nová hra připravena. Začni směrem, tlačítkem nebo dotykovým tahem.");
+    announce("Nová hra připravena. Swipni prstem doprava, doleva, nahoru nebo dolů, nebo použij šipky či tlačítka.");
   }
 }
 
@@ -625,13 +624,11 @@ function handleContrastToggle() {
 }
 
 function handleTouchStart(event) {
-  event.preventDefault();
   const touch = event.changedTouches[0];
   touchStart = { x: touch.clientX, y: touch.clientY };
 }
 
 function handleTouchEnd(event) {
-  event.preventDefault();
   if (!touchStart) {
     return;
   }
@@ -654,10 +651,6 @@ function handleTouchEnd(event) {
   board.focus();
 }
 
-function handleTouchMove(event) {
-  event.preventDefault();
-}
-
 document.addEventListener("keydown", handleKeydown);
 restartButton.addEventListener("click", () => {
   resetGame();
@@ -673,20 +666,8 @@ controlButtons.forEach((button) => {
   });
 });
 
-touchZoneButtons.forEach((button) => {
-  const activateDirection = (event) => {
-    event.preventDefault();
-    handleDirectionalInput(button.dataset.direction);
-    board.focus();
-  };
-
-  button.addEventListener("pointerdown", activateDirection);
-  button.addEventListener("click", activateDirection);
-});
-
-board.addEventListener("touchstart", handleTouchStart, { passive: false });
-board.addEventListener("touchmove", handleTouchMove, { passive: false });
-board.addEventListener("touchend", handleTouchEnd, { passive: false });
+board.addEventListener("touchstart", handleTouchStart, { passive: true });
+board.addEventListener("touchend", handleTouchEnd, { passive: true });
 
 bestScore = getStoredBestScore();
 setContrastMode(getStoredContrastMode());
