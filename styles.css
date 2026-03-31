@@ -71,6 +71,11 @@ a {
   touch-action: manipulation;
 }
 
+.board-wrap,
+.game-board {
+  touch-action: none;
+}
+
 .skip-link,
 .sr-only {
   position: absolute;
